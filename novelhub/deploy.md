@@ -28,12 +28,30 @@ cp .env.example .env
 > - GitHub:  `${PUBLIC_URL}/api/auth/github/callback`
 > - Google:  `${PUBLIC_URL}/api/auth/google/callback`
 
+此外，如需使用 GHCR 中的预构建镜像，可在 `.env` 中设置镜像名称（可选）：
+- BACKEND_IMAGE
+- FRONTEND_IMAGE
+- NGINX_IMAGE
+
+默认镜像可直接使用，无需设置。
+
+## 2.5 登录 GHCR（如使用私有镜像）
+
+使用 GitHub Personal Access Token（需勾选 read:packages）登录：
+
+```bash
+echo $CR_PAT | docker login ghcr.io -u <your-github-username> --password-stdin
+```
+
 ## 3. 启动服务
 
 ```bash
 cd novelhub
-# 首次构建并启动
-docker compose up -d --build
+# 拉取镜像（首次或更新版本）
+docker compose pull
+
+# 启动
+docker compose up -d
 
 # 查看所有容器状态
 docker compose ps
