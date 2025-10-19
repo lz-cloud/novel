@@ -2,6 +2,29 @@
 
 本指南将帮助你使用 Docker Compose 一键部署 NovelHub（前端 + 后端 + PostgreSQL + Redis + Nginx 反向代理）。
 
+## 0. 一键部署（推荐）
+
+- 进入项目目录并执行：
+
+```bash
+cd novelhub
+bash ./deploy.sh
+```
+
+说明：
+- 脚本会自动检测/安装 Docker 与 Docker Compose v2（需要 sudo 权限）
+- 首次运行会基于 .env.example 生成 .env，并自动生成随机 JWT_SECRET
+- 如需从 GHCR 拉取私有镜像，需先导出（可选）：
+
+```bash
+export GHCR_USERNAME=<your-github-username>
+export CR_PAT=<your-personal-access-token-with-read:packages>
+```
+
+- 常用环境变量（可选）：
+  - SKIP_DOCKER=1 跳过 Docker 安装
+  - NO_PULL=1 跳过拉取镜像
+
 ## 1. 前提条件
 
 - 已安装 Docker >= 24.x
