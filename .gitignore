@@ -39,3 +39,7 @@ frontend/dist/
 
 # OS
 Thumbs.db
+
+# PHP backend data
+novelhub/backend/data/
+novelhub/backend/vendor/
