@@ -1,60 +1,16 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: novelhub-postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-novelhub}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-novelhub}
-      POSTGRES_DB: ${POSTGRES_DB:-novelhub}
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - novelhub-net
-
-  redis:
-    image: redis:7-alpine
-    container_name: novelhub-redis
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - novelhub-net
-
   backend:
-    image: ${BACKEND_IMAGE:-ghcr.io/your-gh-org/novelhub-backend:latest}
+    build:
+      context: ..
+      dockerfile: novelhub/backend/Dockerfile
     container_name: novelhub-backend
     env_file:
       - ./.env
     environment:
-      NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
       JWT_SECRET: ${JWT_SECRET}
       SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-604800}
-      FRONTEND_URL: ${PUBLIC_URL}
-      OAUTH_GITHUB_CLIENT_ID: ${OAUTH_GITHUB_CLIENT_ID}
-      OAUTH_GITHUB_CLIENT_SECRET: ${OAUTH_GITHUB_CLIENT_SECRET}
-      OAUTH_GOOGLE_CLIENT_ID: ${OAUTH_GOOGLE_CLIENT_ID}
-      OAUTH_GOOGLE_CLIENT_SECRET: ${OAUTH_GOOGLE_CLIENT_SECRET}
-      OAUTH_GITHUB_CALLBACK_URL: ${OAUTH_GITHUB_CALLBACK_URL}
-      OAUTH_GOOGLE_CALLBACK_URL: ${OAUTH_GOOGLE_CALLBACK_URL}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     ports:
       - "4000:4000"
     healthcheck:
@@ -104,10 +60,6 @@ services:
       retries: 5
     networks:
       - novelhub-net
-
-volumes:
-  db-data:
-  redis-data:
 
 networks:
   novelhub-net:
