@@ -5,13 +5,13 @@ WORKDIR /app
 RUN apk add --no-cache openssl
 
 # Copy package files
-COPY novelhub/backend/package*.json ./
+COPY backend/package*.json ./
 
 # Install dependencies (include dev for Prisma)
 RUN npm ci
 
 # Copy backend source
-COPY novelhub/backend/ ./
+COPY backend/ ./
 
 # Generate Prisma client
 RUN npx prisma generate --schema=src/prisma/schema.prisma

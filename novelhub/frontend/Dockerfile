@@ -1,9 +1,9 @@
 # Build static assets
 FROM node:20-alpine AS build
 WORKDIR /app
-COPY novelhub/frontend/package*.json ./
+COPY frontend/package*.json ./
 RUN npm ci
-COPY novelhub/frontend/ ./
+COPY frontend/ ./
 RUN npm run build
 
 # Run with unprivileged nginx (listens on :8080)

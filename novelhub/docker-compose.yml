@@ -34,8 +34,8 @@ services:
 
   backend:
     build:
-      context: /home/engine/project
-      dockerfile: novelhub/backend/Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: novelhub-backend
     env_file:
       - ./.env
@@ -69,8 +69,8 @@ services:
 
   frontend:
     build:
-      context: /home/engine/project
-      dockerfile: novelhub/frontend/Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     container_name: novelhub-frontend
     env_file:
       - ./.env
@@ -82,7 +82,7 @@ services:
     expose:
       - "8080"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -91,8 +91,8 @@ services:
 
   nginx:
     build:
-      context: /home/engine/project
-      dockerfile: novelhub/nginx/Dockerfile
+      context: .
+      dockerfile: nginx/Dockerfile
     container_name: novelhub-nginx
     depends_on:
       frontend:
@@ -102,7 +102,7 @@ services:
     ports:
       - "${PORT:-8080}:8080"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
       interval: 10s
       timeout: 5s
       retries: 5
